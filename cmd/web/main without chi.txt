@@ -1,0 +1,36 @@
+package main
+
+import (
+	"fmt"
+	"net/http"
+
+	"github.vom/dsundar/go-web-basic/pkg/config"
+	"github.vom/dsundar/go-web-basic/pkg/handlers"
+	"github.vom/dsundar/go-web-basic/pkg/render"
+)
+
+const WebPort = ":8080"
+
+func main() {
+
+	var app config.AppConfig
+	// create a template cache
+	tc, err := render.CreateTemplateCache()
+	if err != nil {
+		fmt.Println("Error creating template cache", err)
+	}
+	app.TemplateCache = tc
+	app.UseCache = false // set to true for production
+
+	repo := handlers.NewRepo(&app)
+	handlers.NewHandlers(repo)
+
+	render.NewTemplates(&app)
+
+	http.HandleFunc("/", handlers.Repo.Home)
+	http.HandleFunc("/about", handlers.Repo.About)
+
+	fmt.Println("Starting web server on port", WebPort)
+	http.ListenAndServe(WebPort, nil)
+
+}
