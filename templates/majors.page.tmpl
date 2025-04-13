@@ -1,0 +1,73 @@
+{{template "base" .}}
+{{define "content"}}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
+                <img src="static/images/marjors-suite.png" class="img-fluid mx-auto d-block room-image img-thumbnail" alt="Majors Suite">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                    <h1 class="text-center mt-4">Majors Suite</h2>
+                        <p>Book your stay with us and enjoy a comfortable experience, in the comfort of the natures best. 
+                        Let go of your busy city life and enjoy the peace and quite at our cosy vintage cabins. 
+                        Situated near the scottish borders, this place has not change since the victorian period. 
+                        This heritage can be seen in our buildings architecture. 
+                        Keeping up with the tradition we serve food form that era and our wines are to die for.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                    <a id="check-availability-button" href="#!" class="btn btn-success">Check Availability</a>
+            </div>
+        </div>
+    </div>
+    <hr>
+{{end}}
+
+{{define "js"}}
+    <script>
+
+(() => {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  const forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+
+      form.classList.add('was-validated')
+    }, false)
+  })
+})()
+
+    document.getElementById("check-availability-button").addEventListener("click", function() {
+        //notify("Hello! there", "success");
+        //notifyModal("title", "<em>Hello! there</em>", "success", "My Button Text")
+        let html = `
+        <form id="checkAvailability-form" action="" method="POST" novalidate class="needs-validation">
+        <div class="row">
+            <div class="col">
+                <div class="row" id="reservation-dates-modal">
+                    <div class="col">
+                        <input disabled required class="form-control" id="start_date" type="text" name="start" placeholder="Arrival date dd-mm-yyyy" aria-describedby="startDateHelp">
+                    </div>
+                    <div class="col">
+                        <input disabled required class="form-control" id="end_date" type="text" name="end" placeholder="Departure date dd-mm-yyyy" aria-describedby="endDateHelp">
+                    </div>
+                </div>
+            </div>           
+        </div>        
+        </form>
+        `
+        attention.custom({msg:html, title:"Choose your dates"});
+    });
+
+    </script>
+{{end}}
