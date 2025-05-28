@@ -2,10 +2,12 @@ package dbrepo
 
 import (
 	"context"
+	"errors"
 	"log"
 	"time"
 
 	"github.com/dsundar/bookings/internal/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func (m *PostgresDBRepo) AllUsers() bool {
@@ -155,4 +157,75 @@ func (m *PostgresDBRepo) GetRoomById(id int) (models.Room, error) {
 	}
 
 	return room, nil
+}
+
+// GetUserById retrieves a user by their ID
+func (m *PostgresDBRepo) GetUserById(id int) (models.User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second) // create a context with a timeout
+	defer cancel()
+
+	var user models.User
+
+	query := `select id, first_name, last_name, email, password, access_level, created_at, updated_at from users where id = $1`
+	row := m.DB.QueryRowContext(ctx, query, id)
+
+	err := row.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email, &user.Password, &user.AccessLevel, &user.CreatedAt, &user.UpdatedAt)
+	if err != nil {
+		log.Println("Error scanning user: ", err)
+		return user, err
+	}
+
+	return user, nil
+}
+
+// UpdateUser updates a user's information in the database
+func (m *PostgresDBRepo) UpdateUser(u models.User) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second) // create a context with a timeout
+	defer cancel()
+
+	query := `update users set first_name = $1, last_name = $2, email = $3, password = $4, access_level = $5, updated_at = $6 where id = $7`
+
+	_, err := m.DB.ExecContext(ctx, query,
+		u.FirstName,
+		u.LastName,
+		u.Email,
+		u.Password,
+		u.AccessLevel,
+		time.Now(),
+		u.ID,
+	)
+	if err != nil {
+		log.Println("Error updating user: ", err)
+		return err
+	}
+
+	return nil
+}
+
+// Authenticate checks if the user exists and if the password matches
+func (m *PostgresDBRepo) Authenticate(email, password string) (int, string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second) // create a context with a timeout
+	defer cancel()
+
+	var id int
+	var hashedPassword string
+
+	query := `select id, password from users where email = $1`
+	row := m.DB.QueryRowContext(ctx, query, email)
+	err := row.Scan(&id, &hashedPassword)
+	if err != nil {
+		return id, "", err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+	if err != nil {
+		if err == bcrypt.ErrMismatchedHashAndPassword {
+			log.Println("Password mismatch for user:", email)
+			return 0, "", errors.New("incorrect Passworrd") // return 0 and empty string if password does not match
+		}
+		log.Println("Error comparing password hash:", err)
+		return 0, "", err // return error if there is an issue with comparing the hash
+	}
+
+	return id, hashedPassword, nil // return user ID and hashed password if authentication is successful
 }

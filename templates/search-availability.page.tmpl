@@ -10,12 +10,12 @@
                     <div class="row" id="reservation-dates">
                         <div class="col">
                             <div class="form-group">
-                                <input required class="form-control" id="start_date1" name="start" placeholder="Arrival date yyyy-mm-dd" aria-describedby="startDateHelp">
+                                <input required class="form-control" id="start_date" name="start_date" placeholder="Arrival date yyyy-mm-dd" aria-describedby="startDateHelp">
                             </div>
                         </div>
                         <div class="col">    
                             <div class="form-group">
-                                <input required class="form-control" id="end_date1" name="end" placeholder="Departure date yyyy-mm-dd" aria-describedby="endDateHelp">
+                                <input required class="form-control" id="end_date" name="end_date" placeholder="Departure date yyyy-mm-dd" aria-describedby="endDateHelp">
                             </div>
                         </div>
                     </div>
@@ -35,6 +35,7 @@
     const elem = document.getElementById('reservation-dates');
     const rangepicker = new DateRangePicker(elem, {
     format: 'yyyy-mm-dd',
+    minDate: new Date(),
     }); 
 </script>
 {{end}}

@@ -17,6 +17,7 @@
                     <input type="hidden" name="start_date" value="{{$res.StartDate}}">
                     <input type="hidden" name="end_date" value="{{$res.EndDate}}">
                     <input type="hidden" name="room_id" value="{{$res.RoomID}}">
+                    <input type="hidden" name="user_id" value="1">
 
                     <div class="form-group mt-3">
                         <label for="first_name">First Name:</label>
@@ -37,8 +38,6 @@
                                id="last_name" autocomplete="off" type='text'
                                name='last_name' value="{{$res.LastName}}" required>
                     </div>
-
-                    <input type="hidden" name="user_id" value="1">
 
                     <div class="form-group">
                         <label for="email">Email:</label>
