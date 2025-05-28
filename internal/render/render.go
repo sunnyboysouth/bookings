@@ -2,6 +2,8 @@ package render
 
 import (
 	"bytes"
+	"errors"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -13,10 +15,10 @@ import (
 )
 
 var app *config.AppConfig
+var pathToTemplates = "./templates"
 
-//NewTemplates sets the config for the template package
-
-func NewTemplates(a *config.AppConfig) {
+// NewRenderer sets the config for the template package
+func NewRenderer(a *config.AppConfig) {
 	// this function is used to create a new template cache
 	// we will use this function to create a new template cache
 	// and assign it to the app config
@@ -25,11 +27,14 @@ func NewTemplates(a *config.AppConfig) {
 
 func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
 	// this function is used to add default data to the template data
+	td.Flash = app.Session.PopString(r.Context(), "flash")
+	td.Warning = app.Session.PopString(r.Context(), "warning")
+	td.Error = app.Session.PopString(r.Context(), "error")
 	td.CSRFToken = nosurf.Token(r)
 	return td
 }
 
-func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) {
+func Template(w http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) error {
 	// we will use this function to render the template using the html/template package to render the template
 	var templateCache map[string]*template.Template
 	if app.UseCache {
@@ -42,7 +47,8 @@ func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *mod
 	//get requested template from the template cache
 	t, ok := templateCache[tmpl]
 	if !ok {
-		log.Fatal("Could not get template from cache")
+		//log.Fatal("Could not get template from cache")
+		return errors.New("could not get template from cache")
 	}
 
 	// this step is completely arbitary but good to track the program if there is an error
@@ -62,8 +68,9 @@ func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *mod
 	_, err = buf.WriteTo(w)
 	if err != nil {
 		log.Println("Error writing buffer to response writer", err)
+		return err
 	}
-
+	return nil
 }
 
 func CreateTemplateCache() (map[string]*template.Template, error) {
@@ -72,7 +79,7 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 	myCache := map[string]*template.Template{} //this is same as templateSet := make(map[string]*template.Template)
 
 	// we will use the template.ParseGlob function to get all the templates in the templates directory
-	pages, err := filepath.Glob("./templates/*.page.tmpl")
+	pages, err := filepath.Glob(fmt.Sprintf("%s/*.page.tmpl", pathToTemplates))
 	if err != nil {
 		return myCache, err
 	}
@@ -87,13 +94,13 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 		}
 
 		// parse the base layout template
-		matches, err := filepath.Glob("./templates/*.layout.tmpl")
+		matches, err := filepath.Glob(fmt.Sprintf("%s/*.layout.tmpl", pathToTemplates))
 		if err != nil {
 			return myCache, err
 		}
 		if len(matches) > 0 {
 			//pray that there is only one match
-			ts, err = ts.ParseGlob("./templates/*.layout.tmpl")
+			ts, err = ts.ParseGlob(fmt.Sprintf("%s/*.layout.tmpl", pathToTemplates))
 			if err != nil {
 				return myCache, err
 			}

@@ -1,0 +1,4 @@
+drop_foreign_key("room_restriction", "room_restriction_reservations_id_fk")
+drop_foreign_key("room_restriction", "room_restriction_restrictions_id_fk")
+drop_foreign_key("room_restriction", "room_restriction_rooms_id_fk")
+drop_foreign_key("room_restriction", "room_restriction_users_id_fk")

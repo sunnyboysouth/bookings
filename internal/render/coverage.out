@@ -1,0 +1,25 @@
+mode: set
+github.com/dsundar/bookings/internal/render/render.go:22.40,27.2 1 1
+github.com/dsundar/bookings/internal/render/render.go:29.84,36.2 5 1
+github.com/dsundar/bookings/internal/render/render.go:38.105,41.18 2 1
+github.com/dsundar/bookings/internal/render/render.go:41.18,44.3 1 0
+github.com/dsundar/bookings/internal/render/render.go:44.8,46.3 1 1
+github.com/dsundar/bookings/internal/render/render.go:49.2,50.9 2 1
+github.com/dsundar/bookings/internal/render/render.go:50.9,53.3 1 1
+github.com/dsundar/bookings/internal/render/render.go:57.2,64.16 4 1
+github.com/dsundar/bookings/internal/render/render.go:64.16,66.3 1 0
+github.com/dsundar/bookings/internal/render/render.go:69.2,70.16 2 1
+github.com/dsundar/bookings/internal/render/render.go:70.16,73.3 2 0
+github.com/dsundar/bookings/internal/render/render.go:74.2,74.12 1 1
+github.com/dsundar/bookings/internal/render/render.go:77.67,84.16 3 1
+github.com/dsundar/bookings/internal/render/render.go:84.16,86.3 1 0
+github.com/dsundar/bookings/internal/render/render.go:88.2,88.29 1 1
+github.com/dsundar/bookings/internal/render/render.go:88.29,93.17 3 1
+github.com/dsundar/bookings/internal/render/render.go:93.17,95.4 1 0
+github.com/dsundar/bookings/internal/render/render.go:98.3,99.17 2 1
+github.com/dsundar/bookings/internal/render/render.go:99.17,101.4 1 0
+github.com/dsundar/bookings/internal/render/render.go:102.3,102.23 1 1
+github.com/dsundar/bookings/internal/render/render.go:102.23,105.18 2 1
+github.com/dsundar/bookings/internal/render/render.go:105.18,107.5 1 0
+github.com/dsundar/bookings/internal/render/render.go:110.3,110.21 1 1
+github.com/dsundar/bookings/internal/render/render.go:113.2,113.21 1 1
